@@ -5,6 +5,8 @@
 
 class Conversions {
 public:
+	static std::string convertAll(const std::string& s);
+private:
 	static std::string toDecimal(const std::string& s);		// 0 to 255
 	static std::string toBinary(const std::string& s);			// 00000000 to 11111111
 	static std::string toOctal(const std::string& s);			// 000 to 377

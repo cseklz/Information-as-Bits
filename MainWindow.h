@@ -5,6 +5,8 @@
 
 class QLabel;
 class QLineEdit;
+class QPushButton;
+class QString;
 
 class MainWindow : public QMainWindow {
 public:
@@ -12,13 +14,20 @@ public:
 
 private:
 	void createInterface();
-	void convertDecimal() const;
-	void convertBinary() const;
-	void convertOctal() const;
-	void convertHexadecimal() const;
+	void convertAll();
+	void updateInputSlate(const QString& text);
+	void clearOutPuts();
+
+	static bool containsOnlyAscii(const QString& text);
 
 	QLineEdit* inputBox_{nullptr};
-	QLabel* outputLabel_{nullptr};
+	QPushButton* convertButton_{nullptr};
+	QLabel* statusLabel_{nullptr};
+
+	QLineEdit* decimalOutput_{nullptr};
+	QLineEdit* binaryOutput_{nullptr};
+	QLineEdit* octalOutput_{nullptr};
+	QLineEdit* hexadecimalOutput_{nullptr};
 };
 
 #endif
