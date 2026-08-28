@@ -12,6 +12,23 @@ std::string Conversions::toDecimal(const std::string& s) {
 	return ret;
 }
 
-// unsigned int toBinary(unsigned char c) {
-// 	unsigned int n { Conversions::toDecimal(c) };
-// }
+std::string Conversions::toBinary(const std::string& s) {
+	std::string ret;
+
+	for (const unsigned char c : s) {
+		if (!ret.empty()) {
+			ret += ' ';
+		}
+
+		std::string tmp;
+
+		for (int bit = 7; bit >= 0; bit--) {
+			unsigned int curr = (c >> bit) & 1;
+			tmp += curr == 1 ? '1' : '0';
+		}
+
+		ret += tmp;
+	}
+
+	return ret;
+}

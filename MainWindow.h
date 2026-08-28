@@ -13,7 +13,8 @@ private:
 	QLineEdit* inputBox{};
 	QLabel* outputLabel{};
 	void createInterface();
-	void convertInput() const;
+	void convertDecimal() const;
+	void convertBinary() const;
 };
 
 #endif

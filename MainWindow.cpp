@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 }
 
 void MainWindow::createInterface() {
-	setWindowTitle("Information as Bits");
+	setWindowTitle("Bit Conversion");
 	resize(800, 600);
 
 	auto* centralWidget = new QWidget(this);
@@ -23,7 +23,8 @@ void MainWindow::createInterface() {
 	inputBox = new QLineEdit;
 	inputBox->setPlaceholderText("ASCII Characters Only");
 
-	auto* convertButton = new QPushButton("Convert to Decimal");
+	auto* convertDecimal = new QPushButton("Convert to Decimal");
+	auto* convertBinary = new QPushButton("Convert to Binary");
 
 	outputLabel = new QLabel("Output will appear here");
 	outputLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
@@ -31,23 +32,34 @@ void MainWindow::createInterface() {
 
 	layout->addWidget(instructions);
 	layout->addWidget(inputBox);
-	layout->addWidget(convertButton);
+	layout->addWidget(convertDecimal);
+	layout->addWidget(convertBinary);
 	layout->addWidget(outputLabel);
 	layout->addStretch();
 
 	setCentralWidget(centralWidget);
 
 	connect(
-		convertButton,
+		convertDecimal,
 		&QPushButton::clicked,
 		this,
-		&MainWindow::convertInput);
+		&MainWindow::convertDecimal);
+
+	connect(
+		convertBinary,
+		&QPushButton::clicked,
+		this,
+		&MainWindow::convertBinary);
 }
 
-void MainWindow::convertInput() const {
-	std::string input = inputBox->text().toStdString();
-
+void MainWindow::convertDecimal() const {
+	std::string input = inputBox->text().toStdString(); // replace with ascii function
 	std::string result = Conversions::toDecimal(input);
-
 	outputLabel->setText(QString::fromStdString(result));
+}
+
+void MainWindow::convertBinary() const {
+	std::string input = inputBox->text().toStdString(); // replace with ascii function
+	std::string result = Conversions::toBinary(input);
+	outputLabel->setText("Binary: " + QString::fromStdString(result));
 }
