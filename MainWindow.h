@@ -1,12 +1,19 @@
-#ifndef INFORMATION_AS_BITS_MAINWINDOW_H
-#define INFORMATION_AS_BITS_MAINWINDOW_H
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
 #include <QMainWindow>
+
+class QLabel;
+class QLineEdit;
 
 class MainWindow : public QMainWindow {
 public:
 	explicit MainWindow(QWidget *parent = nullptr);
 private:
+	QLineEdit* inputBox{};
+	QLabel* outputLabel{};
 	void createInterface();
+	void convertInput() const;
 };
+
 #endif

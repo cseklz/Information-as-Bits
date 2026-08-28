@@ -13,7 +13,9 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets )
 add_executable(Information_As_Bits
         main.cpp
         MainWindow.h
-        MainWindow.cpp)
+        MainWindow.cpp
+        Conversions.cpp
+        Conversions.h)
 
 target_link_libraries(Information_As_Bits
         PRIVATE
