@@ -2,85 +2,77 @@
 
 #include <algorithm>
 
-std::string Conversions::toDecimal(const std::string& s) {
-	std::string ret;
-
-	for (const unsigned char c : s) {
-		if (!ret.empty()) {
-			ret += ' ';
+namespace {
+	void addSeparator(std::string& s) {
+		if (!s.empty()) {
+			s += ' ';
 		}
-
-		ret += std::to_string(static_cast<unsigned int>(c));
 	}
 
-	return ret;
+	char toHexDigit(const unsigned int n) {
+		if (n <= 9) {
+			return static_cast<char>('0' + n);
+		}
+		return static_cast<char>('A' + (n - 10));
+	}
+}
+
+std::string Conversions::toDecimal(const std::string& s) {
+	std::string result;
+
+	for (const unsigned char c : s) {
+		addSeparator(result);
+
+		result += std::to_string(static_cast<unsigned int>(c));
+	}
+
+	return result;
 }
 
 std::string Conversions::toBinary(const std::string& s) {
-	std::string ret;
+	std::string result;
 
 	for (const unsigned char c : s) {
-		if (!ret.empty()) {
-			ret += ' ';
-		}
-
-		std::string tmp;
-
+		addSeparator(result);
 		for (int bit = 7; bit >= 0; bit--) {
-			const unsigned int curr = (c >> bit) & 1;
-			tmp += curr == 1 ? '1' : '0';
+			const unsigned int curr = (c >> bit) & 1U;
+			result += curr == 1 ? '1' : '0';
 		}
-
-		ret += tmp;
 	}
 
-	return ret;
+	return result;
 }
 
 std::string Conversions::toOctal(const std::string& s) {
-	std::string ret;
+	std::string result;
 
 	for (const unsigned char c : s) {
-		if (!ret.empty()) {
-			ret += ' ';
-		}
+		addSeparator(result);
 
-		unsigned int curr { c };
-		std::string tmp;
+		unsigned int curr{c};
+		std::string octal;
 
 		do {
-			tmp += std::to_string(curr % 8);
+			octal += static_cast<char>('0' + curr % 8);
 			curr /= 8;
 		} while (curr > 0);
 
-		std::ranges::reverse(tmp);
-		ret += tmp;
+		std::ranges::reverse(octal);
+		result += octal;
 	}
 
-	return ret;
-}
-
-static char toHex(unsigned int n) {
-	if (n <= 9) {
-		return static_cast<char>('0' + n);
-	}
-	return static_cast<char>('A' + (n - 10));
+	return result;
 }
 
 std::string Conversions::toHexadecimal(const std::string& s) {
-	std::string ret;
+	std::string result;
 
 	for (const unsigned char c : s) {
-		if (!ret.empty()) {
-			ret += ' ';
-		}
+		addSeparator(result);
 
-		const unsigned int first = c / 16;
-		const unsigned int last = c % 16;
-
-		ret += toHex(first);
-		ret += toHex(last);
+		result += toHexDigit(c / 16);
+		result += toHexDigit(c % 16);
 	}
 
-	return ret;
+	return result;
 }

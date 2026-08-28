@@ -20,25 +20,25 @@ void MainWindow::createInterface() {
 	auto* layout = new QVBoxLayout(centralWidget);
 
 	auto* instructions = new QLabel("Enter text: ");
-	inputBox = new QLineEdit;
-	inputBox->setPlaceholderText("ASCII Characters Only");
+	inputBox_ = new QLineEdit;
+	inputBox_->setPlaceholderText("ASCII Characters Only");
 
 	auto* decimalButton = new QPushButton("Convert to Decimal");
 	auto* binaryButton = new QPushButton("Convert to Binary");
 	auto* octalButton = new QPushButton("Convert to Octal");
 	auto* hexadecimalButton = new QPushButton("Convert to Hexadecimal");
 
-	outputLabel = new QLabel("Output will appear here");
-	outputLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
-	outputLabel->setWordWrap(true);
+	outputLabel_ = new QLabel("Output will appear here");
+	outputLabel_->setTextInteractionFlags(Qt::TextSelectableByMouse);
+	outputLabel_->setWordWrap(true);
 
 	layout->addWidget(instructions);
-	layout->addWidget(inputBox);
+	layout->addWidget(inputBox_);
 	layout->addWidget(decimalButton);
 	layout->addWidget(binaryButton);
 	layout->addWidget(octalButton);
 	layout->addWidget(hexadecimalButton);
-	layout->addWidget(outputLabel);
+	layout->addWidget(outputLabel_);
 	layout->addStretch();
 
 	setCentralWidget(centralWidget);
@@ -69,25 +69,25 @@ void MainWindow::createInterface() {
 }
 
 void MainWindow::convertDecimal() const {
-	const std::string input = inputBox->text().toStdString(); // replace with ascii function
+	const std::string input = inputBox_->text().toStdString(); // replace with ascii function
 	const std::string result = Conversions::toDecimal(input);
-	outputLabel->setText(QString::fromStdString(result));
+	outputLabel_->setText(QString::fromStdString(result));
 }
 
 void MainWindow::convertBinary() const {
-	const std::string input = inputBox->text().toStdString(); // replace with ascii function
+	const std::string input = inputBox_->text().toStdString(); // replace with ascii function
 	const std::string result = Conversions::toBinary(input);
-	outputLabel->setText(QString::fromStdString(result));
+	outputLabel_->setText(QString::fromStdString(result));
 }
 
 void MainWindow::convertOctal() const {
-	const std::string input = inputBox->text().toStdString();
+	const std::string input = inputBox_->text().toStdString();
 	const std::string result = Conversions::toOctal(input);
-	outputLabel->setText(QString::fromStdString(result));
+	outputLabel_->setText(QString::fromStdString(result));
 }
 
 void MainWindow::convertHexadecimal() const {
-	const std::string input = inputBox->text().toStdString();
+	const std::string input = inputBox_->text().toStdString();
 	const std::string result = Conversions::toHexadecimal(input);
-	outputLabel->setText(QString::fromStdString(result));
+	outputLabel_->setText(QString::fromStdString(result));
 }
