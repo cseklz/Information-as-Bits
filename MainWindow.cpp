@@ -25,6 +25,7 @@ void MainWindow::createInterface() {
 
 	auto* convertDecimal = new QPushButton("Convert to Decimal");
 	auto* convertBinary = new QPushButton("Convert to Binary");
+	auto* convertOctal = new QPushButton("Convert to Octal");
 
 	outputLabel = new QLabel("Output will appear here");
 	outputLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
@@ -34,6 +35,7 @@ void MainWindow::createInterface() {
 	layout->addWidget(inputBox);
 	layout->addWidget(convertDecimal);
 	layout->addWidget(convertBinary);
+	layout->addWidget(convertOctal);
 	layout->addWidget(outputLabel);
 	layout->addStretch();
 
@@ -50,6 +52,12 @@ void MainWindow::createInterface() {
 		&QPushButton::clicked,
 		this,
 		&MainWindow::convertBinary);
+
+	connect(
+		convertOctal,
+		&QPushButton::clicked,
+		this,
+		&MainWindow::convertOctal);
 }
 
 void MainWindow::convertDecimal() const {
@@ -61,5 +69,11 @@ void MainWindow::convertDecimal() const {
 void MainWindow::convertBinary() const {
 	std::string input = inputBox->text().toStdString(); // replace with ascii function
 	std::string result = Conversions::toBinary(input);
-	outputLabel->setText("Binary: " + QString::fromStdString(result));
+	outputLabel->setText(QString::fromStdString(result));
+}
+
+void MainWindow::convertOctal() const {
+	std::string input = inputBox->text().toStdString();
+	std::string result = Conversions::toOctal(input);
+	outputLabel->setText(QString::fromStdString(result));
 }

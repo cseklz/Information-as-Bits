@@ -15,6 +15,7 @@ private:
 	void createInterface();
 	void convertDecimal() const;
 	void convertBinary() const;
+	void convertOctal() const;
 };
 
 #endif
