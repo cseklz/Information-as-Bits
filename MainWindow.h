@@ -16,6 +16,7 @@ private:
 	void convertDecimal() const;
 	void convertBinary() const;
 	void convertOctal() const;
+	void convertHexadecimal() const;
 };
 
 #endif
