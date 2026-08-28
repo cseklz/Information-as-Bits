@@ -1,8 +1,6 @@
 #include "MainWindow.h"
 #include "Conversions.h"
 
-#include <QChar>
-#include <QFrame>
 #include <QGridLayout>
 #include <QLabel>
 #include <QLineEdit>
@@ -105,7 +103,85 @@ void MainWindow::createInterface() {
 	pageLayout->addWidget(card);
 	pageLayout->addStretch();
 
+	connect(
+		convertButton_,
+		&QPushButton::clicked,
+		this,
+		&MainWindow::handleConversion);
+
+	connect(
+		inputBox_,
+		&QLineEdit::textChanged,
+		this,
+		&MainWindow::updateInputSlate);
+
+	connect(
+		inputBox_,
+		&QLineEdit::returnPressed,
+		convertButton_,
+		&QPushButton::click);
+
 	setCentralWidget(centralWidget);
+}
+
+void MainWindow::handleConversion() const {
+	if (!convertButton_->isEnabled()) {
+		return;
+	}
+
+	const std::string input = inputBox_->text().toStdString();
+	const auto [decimal, binary, octal, hexadecimal] = Conversions::convertAll(input);
+
+	decimalOutput_->setText(QString::fromStdString(decimal));
+	binaryOutput_->setText(QString::fromStdString(binary));
+	octalOutput_->setText(QString::fromStdString(octal));
+	hexadecimalOutput_->setText(QString::fromStdString(hexadecimal));
+
+	statusLabel_->setText("Conversion complete.");
+}
+
+void MainWindow::clearOutputs() const {
+	decimalOutput_->clear();
+	binaryOutput_->clear();
+	octalOutput_->clear();
+	hexadecimalOutput_->clear();
+}
+
+void MainWindow::updateInputSlate(const QString& s) const {
+	const bool isEmpty = s.isEmpty();
+	const bool isAscii = containsOnlyAscii(s);
+	const bool isValid = !isEmpty && isAscii;
+
+	convertButton_->setEnabled(isValid);
+
+	const bool isInvalid = !isEmpty && !isAscii;
+
+	inputBox_->setProperty("invalid", isInvalid);
+	statusLabel_->setProperty("invalid", isInvalid);
+
+	inputBox_->style()->unpolish(inputBox_);
+	inputBox_->style()->polish(inputBox_);
+
+	statusLabel_->style()->unpolish(statusLabel_);
+	statusLabel_->style()->polish(statusLabel_);
+
+	if (isEmpty) {
+		statusLabel_->setText("Enter at least one ASCII character.");
+	}
+	else if (!isAscii) {
+		statusLabel_->setText("Enter only ASCII characters.");
+	}
+	else {
+		statusLabel_->setText("Ready to convert.");
+	}
+
+	clearOutputs();
+}
+
+bool MainWindow::containsOnlyAscii(const QString& s) {
+	return std::ranges::all_of(s, [](const QChar c) {
+		return c.unicode() <= 255;
+	});
 }
 // 	layout->addWidget(instructions);
 // 	layout->addWidget(inputBox_);

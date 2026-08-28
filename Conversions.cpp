@@ -17,6 +17,17 @@ namespace {
 	}
 }
 
+Conversions::Results Conversions::convertAll(const std::string& s) {
+	Results result;
+
+	result.decimal = toDecimal(s);
+	result.binary = toBinary(s);
+	result.octal = toOctal(s);
+	result.hexadecimal = toHexadecimal(s);
+
+	return result;
+}
+
 std::string Conversions::toDecimal(const std::string& s) {
 	std::string result;
 

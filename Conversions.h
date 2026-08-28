@@ -5,7 +5,15 @@
 
 class Conversions {
 public:
-	static std::string convertAll(const std::string& s);
+	struct Results {
+		std::string decimal;
+		std::string binary;
+		std::string octal;
+		std::string hexadecimal;
+	};
+
+	static Results convertAll(const std::string& s);
+
 private:
 	static std::string toDecimal(const std::string& s);		// 0 to 255
 	static std::string toBinary(const std::string& s);			// 00000000 to 11111111

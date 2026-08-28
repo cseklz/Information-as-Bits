@@ -14,11 +14,11 @@ public:
 
 private:
 	void createInterface();
-	void convertAll();
-	void updateInputSlate(const QString& text);
-	void clearOutPuts();
+	void handleConversion() const;
+	void updateInputSlate(const QString& s) const;
+	void clearOutputs() const;
 
-	static bool containsOnlyAscii(const QString& text);
+	static bool containsOnlyAscii(const QString& s);
 
 	QLineEdit* inputBox_{nullptr};
 	QPushButton* convertButton_{nullptr};
