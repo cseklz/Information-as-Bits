@@ -1,8 +1,8 @@
 #include "MainWindow.h"
 #include "ConverterWidget.h"
-#include "PictureWidget.h"
 #include "HomePage.h"
 
+#include <QHBoxLayout>
 #include <QPushButton>
 #include <QStackedWidget>
 #include <QVBoxLayout>
@@ -38,11 +38,9 @@ void MainWindow::createInterface() {
 
 	homePage_ = new HomePage;
 	converterPage_ = new ConverterWidget;
-	picturePage_ = new PictureWidget;
 
 	pages_->addWidget(homePage_);
 	pages_->addWidget(converterPage_);
-	pages_->addWidget(picturePage_);
 
 	pages_->setCurrentWidget(homePage_);
 
@@ -58,16 +56,9 @@ void MainWindow::createInterface() {
 		&MainWindow::showConverterPage);
 
 	connect(
-		homePage_,
-		&HomePage::pictureRequested,
-		this,
-		&MainWindow::showPicturePage);
-
-	connect(
 		backButton_,
 		&QPushButton::clicked,
 		this,&MainWindow::showHomePage);
-
 
 	showHomePage();
 }
@@ -84,11 +75,4 @@ void MainWindow::showConverterPage() {
 	backButton_->setVisible(true);
 
 	setWindowTitle("Information as Bits - Conversions");
-}
-
-void MainWindow::showPicturePage() {
-	pages_->setCurrentWidget(picturePage_);
-	backButton_->setVisible(true);
-
-	setWindowTitle("Information as Bits - Hexadecimal Pictures");
 }

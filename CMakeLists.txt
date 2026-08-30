@@ -19,9 +19,7 @@ add_executable(Information_As_Bits
         MainWindow.h
         MainWindow.cpp
         HomePage.h
-        HomePage.cpp
-        PictureWidget.h
-        PictureWidget.cpp)
+        HomePage.cpp)
 
 qt_add_resources(Information_As_Bits "application_styles"
         PREFIX "/styles"
@@ -31,7 +29,7 @@ qt_add_resources(Information_As_Bits "application_styles"
 
 target_link_libraries(Information_As_Bits
         PRIVATE
-        Qt::Core
-        Qt::Gui
-        Qt::Widgets
+            Qt::Core
+            Qt::Gui
+            Qt::Widgets
 )

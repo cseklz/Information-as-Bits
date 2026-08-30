@@ -71,25 +71,6 @@ QPushButton {
 	color: #ffffff;
 }
 
-QLabel#pictureTitle {
-    font-size: 26px;
-    font-weight: 700;
-}
-
-QLabel#pictureDescription {
-    color: #a9abb3;
-    font-size: 15px;
-}
-
-QLabel#picturePlaceholder {
-    background-color: #202126;
-    border: 1px dashed #484a55;
-    border-radius: 12px;
-
-    color: #858792;
-    font-size: 15px;
-}
-
 QPushButton[modeButton="true"] {
 	 min-height: 22px;
 	 padding: 9px 12px;
