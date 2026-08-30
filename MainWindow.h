@@ -17,6 +17,10 @@ class MainWindow final : public QMainWindow {
 
 	private:
 		void createInterface();
+
+		void showHomePage();
+		void showConverterPage();
+
 		QPushButton* backButton_{nullptr};
 		QStackedWidget* pages_{nullptr};
 

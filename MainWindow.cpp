@@ -48,4 +48,31 @@ void MainWindow::createInterface() {
 	mainLayout->addWidget(pages_);
 
 	setCentralWidget(centralWidget);
+
+	connect(
+		homePage_,
+		&HomePage::conversionRequested,
+		this,
+		&MainWindow::showConverterPage);
+
+	connect(
+		backButton_,
+		&QPushButton::clicked,
+		this,&MainWindow::showHomePage);
+
+	showHomePage();
+}
+
+void MainWindow::showHomePage() {
+	pages_->setCurrentWidget(homePage_);
+	backButton_->setVisible(false);
+
+	setWindowTitle("Information as Bits");
+}
+
+void MainWindow::showConverterPage() {
+	pages_->setCurrentWidget(converterPage_);
+	backButton_->setVisible(true);
+
+	setWindowTitle("Information as Bits - Conversions");
 }

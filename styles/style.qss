@@ -132,3 +132,23 @@ QPushButton:disabled {
 	background-color: #1F242F;
 	color: #777982;
 }
+
+QPushButton#backButton {
+    padding: 8px 14px;
+
+    background-color: transparent;
+    border: 1px solid #3a3b43;
+    border-radius: 8px;
+
+    color: #d7d7dc;
+    font-weight: 600;
+}
+
+QPushButton#backButton:hover {
+    background-color: #292a31;
+    border-color: #6657ff;
+}
+
+QPushButton#backButton:pressed {
+    background-color: #343540;
+}
