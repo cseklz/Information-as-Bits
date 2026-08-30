@@ -25,7 +25,6 @@ void ConverterWidget::createInterface() {
 	auto* card = new QFrame;
 	card->setObjectName("card");
 
-
 	auto* cardLayout = new QVBoxLayout(card);
 	cardLayout->setContentsMargins(32, 28, 32, 28);
 	cardLayout->setSpacing(12);
@@ -191,7 +190,6 @@ void ConverterWidget::clearOutputs() {
 	octalOutput_->clear();
 	hexadecimalOutput_->clear();
 }
-
 
 void ConverterWidget::setInputMode(const InputMode mode) {
 	inputMode_ = mode;

@@ -31,9 +31,6 @@ HomePage::HomePage(QWidget* parent) : QWidget(parent) {
 	pictureButton->setCursor(Qt::PointingHandCursor);
 	pictureButton->setMinimumHeight(110);
 
-	pictureButton->setEnabled(false);
-	pictureButton->setToolTip("The picture feature will be implemented later");
-
 	layout->addStretch();
 	layout->addWidget(title);
 	layout->addWidget(description);

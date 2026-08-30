@@ -9,11 +9,11 @@ namespace {
 		}
 	}
 
-	char toHexDigit(const unsigned int n) {
-		if (n <= 9) {
-			return static_cast<char>('0' + n);
+	char toHexDigit(const unsigned int amount) {
+		if (amount <= 9) {
+			return static_cast<char>('0' + amount);
 		}
-		return static_cast<char>('A' + (n - 10));
+		return static_cast<char>('A' + (amount - 10));
 	}
 }
 
