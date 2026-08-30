@@ -10,38 +10,50 @@ class QPushButton;
 class QString;
 
 class MainWindow : public QMainWindow {
-public:
-	explicit MainWindow(QWidget* parent = nullptr);
+	public:
+		explicit MainWindow(QWidget* parent = nullptr);
 
-private:
-	enum class InputMode {
-		ascii,
-		decimal,
-		binary,
-		octal,
-		hexadecimal
-	};
+	private:
+		enum class InputMode {
+			ascii,
+			decimal,
+			binary,
+			octal,
+			hexadecimal
+		};
 
-	void createInterface();
-	void handleConversion();
-	void updateInputState(const QString& s);
-	void clearOutputs();
-	void handleInputMode(int id);
-	void setInputMode(InputMode mode);
+		void createInterface();
 
-	static bool containsOnlyAscii(const QString& s);
+		void updateOutputVisibility();
+		void clearOutputs(); // handle input section (add type checks)
+		void setInputMode(InputMode mode);
 
-	QLineEdit* inputBox_{nullptr};
-	QPushButton* convertButton_{nullptr};
-	QLabel* statusLabel_{nullptr};
-	QButtonGroup* inputModeGroup_{nullptr};
+		void updateInputState(const QString& s);
+		void handleInputMode(int id);
+		void handleConversion();
 
-	QLineEdit* decimalOutput_{nullptr};
-	QLineEdit* binaryOutput_{nullptr};
-	QLineEdit* octalOutput_{nullptr};
-	QLineEdit* hexadecimalOutput_{nullptr};
+		static bool containsOnlyAscii(const QString& s); // either remove or add more for each type
 
-	InputMode inputMode_{InputMode::ascii};
+		QPushButton* convertButton_{nullptr};
+		QButtonGroup* inputModeGroup_{nullptr};
+
+		QLineEdit* inputBox_{nullptr};
+		QLineEdit* asciiOutput_{nullptr};
+		QLineEdit* decimalOutput_{nullptr};
+		QLineEdit* binaryOutput_{nullptr};
+		QLineEdit* octalOutput_{nullptr};
+		QLineEdit* hexadecimalOutput_{nullptr};
+
+		QLabel* asciiOutputLabel_{nullptr};
+		QLabel* decimalOutputLabel_{nullptr};
+		QLabel* binaryOutputLabel_{nullptr};
+		QLabel* octalOutputLabel_{nullptr};
+		QLabel* hexadecimalOutputLabel_{nullptr};
+
+		QLabel* inputLabel_{nullptr};
+		QLabel* statusLabel_{nullptr};
+
+		InputMode inputMode_{InputMode::ascii};
 };
 
 #endif

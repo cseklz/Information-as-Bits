@@ -17,6 +17,12 @@ add_executable(Information_As_Bits
         Conversions.cpp
         Conversions.h)
 
+qt_add_resources(Information_As_Bits "application_styles"
+        PREFIX "/styles"
+        BASE "styles"
+        FILES
+        styles/style.qss)
+
 target_link_libraries(Information_As_Bits
         PRIVATE
             Qt::Core

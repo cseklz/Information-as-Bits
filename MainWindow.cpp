@@ -32,6 +32,7 @@ void MainWindow::createInterface() {
 	auto* card = new QFrame;
 	card->setObjectName("card");
 
+
 	auto* cardLayout = new QVBoxLayout(card);
 	cardLayout->setContentsMargins(32, 28, 32, 28);
 	cardLayout->setSpacing(12);
@@ -41,6 +42,9 @@ void MainWindow::createInterface() {
 
 	auto* modeLayout = new QHBoxLayout;
 	modeLayout->setSpacing(8);
+
+	inputLabel_ = new QLabel("ASCII");
+	inputLabel_->setObjectName("input");
 
 	inputModeGroup_ = new QButtonGroup(this);
 	inputModeGroup_->setExclusive(true);
@@ -57,17 +61,17 @@ void MainWindow::createInterface() {
 		return button;
 	};
 
-	auto* asciiButton = addModeButton("ASCII", InputMode::ascii);
+	auto* modeButton = addModeButton("ASCII", InputMode::ascii);
 	addModeButton("Decimal", InputMode::decimal);
 	addModeButton("Binary", InputMode::binary);
 	addModeButton("Octal", InputMode::octal);
 	addModeButton("Hexadecimal", InputMode::hexadecimal);
 
 	inputBox_ = new QLineEdit;
-	inputBox_->setPlaceholderText("Enter text to convert");
+	inputBox_->setPlaceholderText("Enter value(s) to convert");
 	inputBox_->setClearButtonEnabled(true);
 
-	statusLabel_ = new QLabel("Enter at least one character");
+	statusLabel_ = new QLabel("Enter at least one value");
 	statusLabel_->setObjectName("status");
 
 	convertButton_ = new QPushButton("Convert");
@@ -84,10 +88,17 @@ void MainWindow::createInterface() {
 		return field;
 	};
 
+	asciiOutput_ = createOutputField();
 	decimalOutput_ = createOutputField();
 	binaryOutput_ = createOutputField();
 	octalOutput_ = createOutputField();
 	hexadecimalOutput_ = createOutputField();
+
+	asciiOutputLabel_ = new QLabel("ASCII");
+	decimalOutputLabel_ = new QLabel("Decimal");
+	binaryOutputLabel_ = new QLabel("Binary");
+	octalOutputLabel_ = new QLabel("Octal");
+	hexadecimalOutputLabel_ = new QLabel("Hexadecimal");
 
 	auto* outputGrid = new QGridLayout;
 
@@ -95,17 +106,23 @@ void MainWindow::createInterface() {
 	outputGrid->setVerticalSpacing(8);
 	outputGrid->setColumnStretch(1, 1);
 
-	outputGrid->addWidget(new QLabel("Decimal"), 0, 0);
-	outputGrid->addWidget(decimalOutput_, 0, 1);
+	outputGrid->addWidget(asciiOutputLabel_, 0, 0);
+	outputGrid->addWidget(asciiOutput_, 0, 1);
 
-	outputGrid->addWidget(new QLabel("Binary"), 1, 0);
-	outputGrid->addWidget(binaryOutput_, 1, 1);
+	outputGrid->addWidget(decimalOutputLabel_, 1, 0);
+	outputGrid->addWidget(decimalOutput_, 1, 1);
 
-	outputGrid->addWidget(new QLabel("Octal"), 2, 0);
-	outputGrid->addWidget(octalOutput_, 2, 1);
+	outputGrid->addWidget(binaryOutputLabel_, 2, 0);
+	outputGrid->addWidget(binaryOutput_, 2, 1);
 
-	outputGrid->addWidget(new QLabel("Hexadecimal"), 3, 0);
-	outputGrid->addWidget(hexadecimalOutput_, 3, 1);
+	outputGrid->addWidget(octalOutputLabel_, 3, 0);
+	outputGrid->addWidget(octalOutput_, 3, 1);
+
+	outputGrid->addWidget(hexadecimalOutputLabel_, 4, 0);
+	outputGrid->addWidget(hexadecimalOutput_, 4, 1);
+
+	cardLayout->addWidget(inputLabel_);
+	cardLayout->addSpacing(8);
 
 	cardLayout->addWidget(modeLabel);
 	cardLayout->addLayout(modeLayout);
@@ -124,104 +141,6 @@ void MainWindow::createInterface() {
 	pageLayout->addStretch();
 
 	setCentralWidget(centralWidget);
-
-	setStyleSheet(R"(
-		QWidget#page {
-			background-color: #19191C;
-			color: #f4f6fa;
-		}
-
-		QFrame#converterCard {
-			background-color: #252528;
-			border: 1px solid #292b2d;
-			border-radius: 18px;
-		}
-
-		QLabel#section {
-			font-size: 13px;
-			font-weight: 600;
-			color: #CFCFCF;
-		}
-
-		QLabel#status {
-			font-size: 12px;
-			color: #CFCFCF;
-		}
-
-		QLabel#status[invalid="true"] {
-			color: #453B23;
-		}
-
-		QLineEdit {
-			min-height: 22px;
-			padding: 9px 11px;
-			background-color: #303033;
-			border: 1px solid #58585C;
-			border-radius: 9px;
-			font-size: 14px;
-			color: #FFFFFF;
-			selection-background-color: #5146EE;
-		}
-
-		QLineEdit:focus {
-			padding: 8px 10px;
-			border: 2px solid #5146EE;
-		}
-
-		QLineEdit[invalid="true"] {
-			padding: 8px 10px;
-			border: 2px solid #453B23;
-		}
-
-		QLineEdit[readOnly="true"] {
-			background-color: #FFFFFF;
-			color: #334155;
-		}
-
-		QPushButton {
-			min-height: 24px;
-			padding: 10px 14px;
-			background-color: #5146EE;
-			border: none;
-			border-radius: 9px;
-			font-size: 14px;
-			font-weight: 600;
-			color: #ffffff;
-		}
-
-		QPushButton[modeButton="true"] {
-		    min-height: 22px;
-		    padding: 9px 12px;
-		    background-color: #20242e;
-		    border: 1px solid #3a4050;
-		    border-radius: 7px;
-		    color: #aeb5c5;
-		}
-
-		QPushButton[modeButton="true"]:hover {
-		    background-color: #292e3a;
-		    border-color: #585f73;
-		}
-
-		QPushButton[modeButton="true"]:checked {
-		    background-color: #5b4df5;
-		    border-color: #7569ff;
-		    color: #ffffff;
-		}
-
-		QPushButton:hover {
-			background-color: #4338ca;
-		}
-
-		QPushButton:pressed {
-			background-color: #3730a3;
-		}
-
-		QPushButton:disabled {
-			background-color: #1F242F;
-			color: #94a3b8;
-		}
-	)");
 
 	connect(
 		convertButton_,
