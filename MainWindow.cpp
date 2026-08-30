@@ -2,8 +2,10 @@
 #include "Conversions.h"
 
 #include <algorithm>
+#include <QButtonGroup>
 #include <QByteArray>
 #include <QGridLayout>
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
@@ -17,9 +19,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 }
 
 void MainWindow::createInterface() {
-	setWindowTitle("ASCII Converter");
+	setWindowTitle("Number-Base Converter");
 	setMinimumSize(640, 500);
-	resize(800, 600);
+	resize(1000, 720);
 
 	auto* centralWidget = new QWidget(this);
 	centralWidget->setObjectName("page");
@@ -34,21 +36,38 @@ void MainWindow::createInterface() {
 	cardLayout->setContentsMargins(32, 28, 32, 28);
 	cardLayout->setSpacing(12);
 
-	auto* title = new QLabel("ASCII Converter");
-	title->setObjectName("title");
+	auto* modeLabel = new QLabel("Input Type");
+	modeLabel->setObjectName("mode");
 
-	auto* subtitle = new QLabel("Enter ASCII to see decimal, binary, octal, and hexadecimal output");
-	subtitle->setObjectName("subtitle");
-	subtitle->setWordWrap(true);
+	auto* modeLayout = new QHBoxLayout;
+	modeLayout->setSpacing(8);
 
-	auto* inputLabel = new QLabel("Text");
-	inputLabel->setObjectName("input");
+	inputModeGroup_ = new QButtonGroup(this);
+	inputModeGroup_->setExclusive(true);
+
+	auto addModeButton = [this, modeLayout](const QString& label, const InputMode mode) {
+		auto* button = new QPushButton(label);
+
+		button->setCheckable(true);
+		button->setProperty("modeButton", true);
+
+		inputModeGroup_->addButton(button, static_cast<int>(mode));
+		modeLayout->addWidget(button);
+
+		return button;
+	};
+
+	auto* asciiButton = addModeButton("ASCII", InputMode::ascii);
+	addModeButton("Decimal", InputMode::decimal);
+	addModeButton("Binary", InputMode::binary);
+	addModeButton("Octal", InputMode::octal);
+	addModeButton("Hexadecimal", InputMode::hexadecimal);
 
 	inputBox_ = new QLineEdit;
-	inputBox_->setPlaceholderText("Enter ASCII Only");
+	inputBox_->setPlaceholderText("Enter text to convert");
 	inputBox_->setClearButtonEnabled(true);
 
-	statusLabel_ = new QLabel("Enter at least one ASCII character.");
+	statusLabel_ = new QLabel("Enter at least one character");
 	statusLabel_->setObjectName("status");
 
 	convertButton_ = new QPushButton("Convert");
@@ -88,11 +107,10 @@ void MainWindow::createInterface() {
 	outputGrid->addWidget(new QLabel("Hexadecimal"), 3, 0);
 	outputGrid->addWidget(hexadecimalOutput_, 3, 1);
 
-	cardLayout->addWidget(title);
-	cardLayout->addWidget(subtitle);
+	cardLayout->addWidget(modeLabel);
+	cardLayout->addLayout(modeLayout);
 	cardLayout->addSpacing(8);
 
-	cardLayout->addWidget(inputLabel);
 	cardLayout->addWidget(inputBox_);
 	cardLayout->addWidget(statusLabel_);
 	cardLayout->addWidget(convertButton_);
@@ -117,17 +135,6 @@ void MainWindow::createInterface() {
 			background-color: #252528;
 			border: 1px solid #292b2d;
 			border-radius: 18px;
-		}
-
-		QLabel#title {
-			font-size: 24px;
-			font-weight: 700;
-			color: #FFFFFF;
-		}
-
-		QLabel#subtitle {
-			font-size: 13px;
-			color: #CFCFCF;
 		}
 
 		QLabel#section {
@@ -182,6 +189,26 @@ void MainWindow::createInterface() {
 			color: #ffffff;
 		}
 
+		QPushButton[modeButton="true"] {
+		    min-height: 22px;
+		    padding: 9px 12px;
+		    background-color: #20242e;
+		    border: 1px solid #3a4050;
+		    border-radius: 7px;
+		    color: #aeb5c5;
+		}
+
+		QPushButton[modeButton="true"]:hover {
+		    background-color: #292e3a;
+		    border-color: #585f73;
+		}
+
+		QPushButton[modeButton="true"]:checked {
+		    background-color: #5b4df5;
+		    border-color: #7569ff;
+		    color: #ffffff;
+		}
+
 		QPushButton:hover {
 			background-color: #4338ca;
 		}
@@ -191,7 +218,7 @@ void MainWindow::createInterface() {
 		}
 
 		QPushButton:disabled {
-			background-color: #453B23;
+			background-color: #1F242F;
 			color: #94a3b8;
 		}
 	)");
@@ -213,6 +240,26 @@ void MainWindow::createInterface() {
 		&QLineEdit::returnPressed,
 		convertButton_,
 		&QPushButton::click);
+
+	connect(
+		inputModeGroup_,
+		&QButtonGroup::idClicked,
+		this,
+		&MainWindow::handleInputMode);
+}
+
+void MainWindow::handleInputMode(const int id) {
+	const auto mode = static_cast<InputMode>(id);
+	setInputMode(mode);
+}
+
+void MainWindow::setInputMode(const InputMode mode) {
+	inputMode_ = mode;
+
+	inputBox_->clear();
+	clearOutputs();
+
+	statusLabel_->setText("Enter a value to convert");
 }
 
 void MainWindow::handleConversion() {
