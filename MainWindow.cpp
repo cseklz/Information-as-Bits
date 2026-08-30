@@ -1,6 +1,8 @@
 #include "MainWindow.h"
 #include "Conversions.h"
 
+#include <algorithm>
+#include <QByteArray>
 #include <QGridLayout>
 #include <QLabel>
 #include <QLineEdit>
@@ -103,6 +105,97 @@ void MainWindow::createInterface() {
 	pageLayout->addWidget(card);
 	pageLayout->addStretch();
 
+	setCentralWidget(centralWidget);
+
+	setStyleSheet(R"(
+		QWidget#page {
+			background-color: #19191C;
+			color: #f4f6fa;
+		}
+
+		QFrame#converterCard {
+			background-color: #252528;
+			border: 1px solid #292b2d;
+			border-radius: 18px;
+		}
+
+		QLabel#title {
+			font-size: 24px;
+			font-weight: 700;
+			color: #FFFFFF;
+		}
+
+		QLabel#subtitle {
+			font-size: 13px;
+			color: #CFCFCF;
+		}
+
+		QLabel#section {
+			font-size: 13px;
+			font-weight: 600;
+			color: #CFCFCF;
+		}
+
+		QLabel#status {
+			font-size: 12px;
+			color: #CFCFCF;
+		}
+
+		QLabel#status[invalid="true"] {
+			color: #453B23;
+		}
+
+		QLineEdit {
+			min-height: 22px;
+			padding: 9px 11px;
+			background-color: #303033;
+			border: 1px solid #58585C;
+			border-radius: 9px;
+			font-size: 14px;
+			color: #FFFFFF;
+			selection-background-color: #5146EE;
+		}
+
+		QLineEdit:focus {
+			padding: 8px 10px;
+			border: 2px solid #5146EE;
+		}
+
+		QLineEdit[invalid="true"] {
+			padding: 8px 10px;
+			border: 2px solid #453B23;
+		}
+
+		QLineEdit[readOnly="true"] {
+			background-color: #FFFFFF;
+			color: #334155;
+		}
+
+		QPushButton {
+			min-height: 24px;
+			padding: 10px 14px;
+			background-color: #5146EE;
+			border: none;
+			border-radius: 9px;
+			font-size: 14px;
+			font-weight: 600;
+			color: #ffffff;
+		}
+
+		QPushButton:hover {
+			background-color: #4338ca;
+		}
+
+		QPushButton:pressed {
+			background-color: #3730a3;
+		}
+
+		QPushButton:disabled {
+			background-color: #453B23;
+			color: #94a3b8;
+		}
+	)");
+
 	connect(
 		convertButton_,
 		&QPushButton::clicked,
@@ -113,23 +206,23 @@ void MainWindow::createInterface() {
 		inputBox_,
 		&QLineEdit::textChanged,
 		this,
-		&MainWindow::updateInputSlate);
+		&MainWindow::updateInputState);
 
 	connect(
 		inputBox_,
 		&QLineEdit::returnPressed,
 		convertButton_,
 		&QPushButton::click);
-
-	setCentralWidget(centralWidget);
 }
 
-void MainWindow::handleConversion() const {
+void MainWindow::handleConversion() {
 	if (!convertButton_->isEnabled()) {
 		return;
 	}
 
-	const std::string input = inputBox_->text().toStdString();
+	const QByteArray bytes = inputBox_->text().toLatin1();
+	const std::string input = bytes.toStdString();
+
 	const auto [decimal, binary, octal, hexadecimal] = Conversions::convertAll(input);
 
 	decimalOutput_->setText(QString::fromStdString(decimal));
@@ -140,21 +233,21 @@ void MainWindow::handleConversion() const {
 	statusLabel_->setText("Conversion complete.");
 }
 
-void MainWindow::clearOutputs() const {
+void MainWindow::clearOutputs() {
 	decimalOutput_->clear();
 	binaryOutput_->clear();
 	octalOutput_->clear();
 	hexadecimalOutput_->clear();
 }
 
-void MainWindow::updateInputSlate(const QString& s) const {
+void MainWindow::updateInputState(const QString& s) {
 	const bool isEmpty = s.isEmpty();
 	const bool isAscii = containsOnlyAscii(s);
 	const bool isValid = !isEmpty && isAscii;
+	const bool isInvalid = !isEmpty && !isAscii;
 
 	convertButton_->setEnabled(isValid);
 
-	const bool isInvalid = !isEmpty && !isAscii;
 
 	inputBox_->setProperty("invalid", isInvalid);
 	statusLabel_->setProperty("invalid", isInvalid);
@@ -183,62 +276,3 @@ bool MainWindow::containsOnlyAscii(const QString& s) {
 		return c.unicode() <= 255;
 	});
 }
-// 	layout->addWidget(instructions);
-// 	layout->addWidget(inputBox_);
-// 	layout->addWidget(decimalButton);
-// 	layout->addWidget(binaryButton);
-// 	layout->addWidget(octalButton);
-// 	layout->addWidget(hexadecimalButton);
-// 	layout->addWidget(outputLabel_);
-// 	layout->addStretch();
-//
-// 	setCentralWidget(centralWidget);
-//
-// 	connect(
-// 		decimalButton,
-// 		&QPushButton::clicked,
-// 		this,
-// 		&MainWindow::convertDecimal);
-//
-// 	connect(
-// 		binaryButton,
-// 		&QPushButton::clicked,
-// 		this,
-// 		&MainWindow::convertBinary);
-//
-// 	connect(
-// 		octalButton,
-// 		&QPushButton::clicked,
-// 		this,
-// 		&MainWindow::convertOctal);
-//
-// 	connect(
-// 		hexadecimalButton,
-// 		&QPushButton::clicked,
-// 		this,
-// 		&MainWindow::convertHexadecimal);
-// }
-//
-// void MainWindow::convertDecimal() const {
-// 	const std::string input = inputBox_->text().toStdString(); // replace with ascii function
-// 	const std::string result = Conversions::toDecimal(input);
-// 	outputLabel_->setText(QString::fromStdString(result));
-// }
-//
-// void MainWindow::convertBinary() const {
-// 	const std::string input = inputBox_->text().toStdString(); // replace with ascii function
-// 	const std::string result = Conversions::toBinary(input);
-// 	outputLabel_->setText(QString::fromStdString(result));
-// }
-//
-// void MainWindow::convertOctal() const {
-// 	const std::string input = inputBox_->text().toStdString();
-// 	const std::string result = Conversions::toOctal(input);
-// 	outputLabel_->setText(QString::fromStdString(result));
-// }
-//
-// void MainWindow::convertHexadecimal() const {
-// 	const std::string input = inputBox_->text().toStdString();
-// 	const std::string result = Conversions::toHexadecimal(input);
-// 	outputLabel_->setText(QString::fromStdString(result));
-// }

@@ -14,9 +14,9 @@ public:
 
 private:
 	void createInterface();
-	void handleConversion() const;
-	void updateInputSlate(const QString& s) const;
-	void clearOutputs() const;
+	void handleConversion();
+	void updateInputState(const QString& s);
+	void clearOutputs();
 
 	static bool containsOnlyAscii(const QString& s);
 
