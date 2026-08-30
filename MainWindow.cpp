@@ -61,7 +61,7 @@ void MainWindow::createInterface() {
 		return button;
 	};
 
-	auto* modeButton = addModeButton("ASCII", InputMode::ascii);
+	auto* asciiButton = addModeButton("ASCII", InputMode::ascii);
 	addModeButton("Decimal", InputMode::decimal);
 	addModeButton("Binary", InputMode::binary);
 	addModeButton("Octal", InputMode::octal);
@@ -165,20 +165,130 @@ void MainWindow::createInterface() {
 		&QButtonGroup::idClicked,
 		this,
 		&MainWindow::handleInputMode);
+
+	asciiButton->setChecked(true);
+	setInputMode(InputMode::ascii);
 }
 
-void MainWindow::handleInputMode(const int id) {
-	const auto mode = static_cast<InputMode>(id);
-	setInputMode(mode);
+void MainWindow::updateOutputVisibility() {
+	const bool showAscii = inputMode_ != InputMode::ascii;
+	const bool showDecimal = inputMode_ != InputMode::decimal;
+	const bool showBinary = inputMode_ != InputMode::binary;
+	const bool showOctal = inputMode_ != InputMode::octal;
+	const bool showHexadecimal = inputMode_ != InputMode::hexadecimal;
+
+	asciiOutputLabel_->setVisible(showAscii);
+	asciiOutput_->setVisible(showAscii);
+
+	decimalOutputLabel_->setVisible(showDecimal);
+	decimalOutput_->setVisible(showDecimal);
+
+	binaryOutputLabel_->setVisible(showBinary);
+	binaryOutput_->setVisible(showBinary);
+
+	octalOutputLabel_->setVisible(showOctal);
+	octalOutput_->setVisible(showOctal);
+
+	hexadecimalOutputLabel_->setVisible(showHexadecimal);
+	hexadecimalOutput_->setVisible(showHexadecimal);
 }
+
+void MainWindow::clearOutputs() {
+	asciiOutput_->clear();
+	decimalOutput_->clear();
+	binaryOutput_->clear();
+	octalOutput_->clear();
+	hexadecimalOutput_->clear();
+}
+
 
 void MainWindow::setInputMode(const InputMode mode) {
 	inputMode_ = mode;
 
 	inputBox_->clear();
 	clearOutputs();
+	updateOutputVisibility();
 
-	statusLabel_->setText("Enter a value to convert");
+	switch (inputMode_) {
+		case InputMode::ascii:
+			inputLabel_->setText("ASCII");
+			inputBox_->setPlaceholderText("Enter ASCII character.");
+			statusLabel_->setText("Enter at least one character.");
+			break;
+		case InputMode::decimal:
+			inputLabel_->setText("Decimal");
+			inputBox_->setPlaceholderText("Enter decimal value.");
+			statusLabel_->setText("Enter an unsigned integer.");
+			break;
+		case InputMode::binary:
+			inputLabel_->setText("Binary");
+			inputBox_->setPlaceholderText("Enter binary value.");
+			statusLabel_->setText("Enter a number using 0 and 1.");
+			break;
+		case InputMode::octal:
+			inputLabel_->setText("Octal");
+			inputBox_->setPlaceholderText("Enter octal value.");
+			statusLabel_->setText("Enter a number using 0 through 7.");
+			break;
+		case InputMode::hexadecimal:
+			inputLabel_->setText("Hexadecimal");
+			inputBox_->setPlaceholderText("Enter hexadecimal value.");
+			statusLabel_->setText("Enter a number using 0-9 and A-F.");
+			break;
+	}
+
+	convertButton_->setEnabled(false);
+}
+
+void MainWindow::updateInputState(const QString& s) {
+	const bool isEmpty = s.isEmpty();
+	const bool isAscii = containsOnlyAscii(s);
+	const bool isValid = !isEmpty && isAscii;
+	const bool isInvalid = !isEmpty && !isAscii;
+
+	clearOutputs();
+
+	if (inputMode_ != InputMode::ascii) {
+		convertButton_->setEnabled(false);
+
+		if (isEmpty) {
+			statusLabel_->setText("Enter a number to convert.");
+		}
+		else {
+			statusLabel_->setText("Numeric conversion is not implemented yet");
+		}
+
+		return;
+	}
+
+	convertButton_->setEnabled(isValid);
+
+	inputBox_->setProperty("invalid", isInvalid);
+	statusLabel_->setProperty("invalid", isInvalid);
+
+	inputBox_->style()->unpolish(inputBox_);
+	inputBox_->style()->polish(inputBox_);
+
+	statusLabel_->style()->unpolish(statusLabel_);
+	statusLabel_->style()->polish(statusLabel_);
+
+	if (isEmpty) {
+		statusLabel_->setText("Enter at least one ASCII character.");
+	}
+	else {
+		statusLabel_->setText("Ready to convert.");
+	}
+
+	clearOutputs();
+
+	if (!isAscii) {
+		statusLabel_->setText("Enter only ASCII characters.");
+	}
+}
+
+void MainWindow::handleInputMode(const int id) {
+	const auto mode = static_cast<InputMode>(id);
+	setInputMode(mode);
 }
 
 void MainWindow::handleConversion() {
@@ -197,44 +307,6 @@ void MainWindow::handleConversion() {
 	hexadecimalOutput_->setText(QString::fromStdString(hexadecimal));
 
 	statusLabel_->setText("Conversion complete.");
-}
-
-void MainWindow::clearOutputs() {
-	decimalOutput_->clear();
-	binaryOutput_->clear();
-	octalOutput_->clear();
-	hexadecimalOutput_->clear();
-}
-
-void MainWindow::updateInputState(const QString& s) {
-	const bool isEmpty = s.isEmpty();
-	const bool isAscii = containsOnlyAscii(s);
-	const bool isValid = !isEmpty && isAscii;
-	const bool isInvalid = !isEmpty && !isAscii;
-
-	convertButton_->setEnabled(isValid);
-
-
-	inputBox_->setProperty("invalid", isInvalid);
-	statusLabel_->setProperty("invalid", isInvalid);
-
-	inputBox_->style()->unpolish(inputBox_);
-	inputBox_->style()->polish(inputBox_);
-
-	statusLabel_->style()->unpolish(statusLabel_);
-	statusLabel_->style()->polish(statusLabel_);
-
-	if (isEmpty) {
-		statusLabel_->setText("Enter at least one ASCII character.");
-	}
-	else if (!isAscii) {
-		statusLabel_->setText("Enter only ASCII characters.");
-	}
-	else {
-		statusLabel_->setText("Ready to convert.");
-	}
-
-	clearOutputs();
 }
 
 bool MainWindow::containsOnlyAscii(const QString& s) {

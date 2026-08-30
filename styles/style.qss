@@ -46,8 +46,8 @@ QLineEdit[invalid="true"] {
 }
 
 QLineEdit[readOnly="true"] {
-	background-color: #FFFFFF;
-	color: #334155;
+	background-color: #2B2B2B;
+	color: #FFFFFF;
 }
 
 QPushButton {
