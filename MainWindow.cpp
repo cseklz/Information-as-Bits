@@ -1,5 +1,6 @@
 #include "MainWindow.h"
 #include "ConverterWidget.h"
+#include "HomePage.h"
 
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -35,8 +36,13 @@ void MainWindow::createInterface() {
 
 	pages_ = new QStackedWidget;
 
+	homePage_ = new HomePage;
 	converterPage_ = new ConverterWidget;
+
+	pages_->addWidget(homePage_);
 	pages_->addWidget(converterPage_);
+
+	pages_->setCurrentWidget(homePage_);
 
 	mainLayout->addLayout(navigationLayout);
 	mainLayout->addWidget(pages_);

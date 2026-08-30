@@ -1,3 +1,13 @@
+QLabel#homeTitle {
+	font-size: 30px;
+	font-weight: 700;
+}
+
+QLabel#homeDescription {
+	color: #a9abb3;
+	font-size: 15px;
+}
+
 QWidget#page {
 			background-color: #19191C;
 			color: #f4f6fa;
@@ -81,6 +91,35 @@ QPushButton[modeButton="true"]:checked {
 	 color: #ffffff;
 }
 
+QPushButton[toolOption="true"] {
+	min-height: 90px;
+	padding: 18px 22px;
+
+	background-color: #20242e;
+	border: 1px solid #3a4050;
+	border-radius: 12px;
+
+	color: #ffffff;
+	font-size: 16px;
+	font-weight: 600;
+	text-align: left;
+}
+
+QPushButton[toolOption="true"]:hover {
+	background-color: #4338ca;
+	border-color: #6657ff;
+}
+
+QPushButton[toolOption="true"]:pressed {
+	background-color: #3730a3;
+}
+
+QPushButton[toolOption="true"]:disabled {
+	background-color: #1F242F;
+	border-color: #303139;
+	color: #777982;
+}
+
 QPushButton:hover {
 	background-color: #4338ca;
 }
@@ -91,5 +130,5 @@ QPushButton:pressed {
 
 QPushButton:disabled {
 	background-color: #1F242F;
-	color: #94a3b8;
+	color: #777982;
 }

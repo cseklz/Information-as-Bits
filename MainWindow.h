@@ -6,6 +6,8 @@
 #include "ConverterWidget.h"
 
 class ConvertWidget;
+class HomePage;
+
 class QPushButton;
 class QStackedWidget;
 
@@ -17,6 +19,8 @@ class MainWindow final : public QMainWindow {
 		void createInterface();
 		QPushButton* backButton_{nullptr};
 		QStackedWidget* pages_{nullptr};
+
+		HomePage* homePage_{nullptr};
 		ConverterWidget* converterPage_{nullptr};
 };
 

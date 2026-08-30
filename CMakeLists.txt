@@ -17,7 +17,9 @@ add_executable(Information_As_Bits
         Conversions.cpp
         Conversions.h
         MainWindow.h
-        MainWindow.cpp)
+        MainWindow.cpp
+        HomePage.h
+        HomePage.cpp)
 
 qt_add_resources(Information_As_Bits "application_styles"
         PREFIX "/styles"
