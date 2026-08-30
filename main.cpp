@@ -1,24 +1,18 @@
-#include "ConverterWidget.h"
+#include "MainWindow.h"
 
 #include <QApplication>
 #include <QFile>
+#include <QString>
 
 int main(int argc, char *argv[]) {
 	QApplication a(argc, argv);
 
-	QFile file(":/styles/style.qss");
-
-	if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-		const QByteArray qss = file.readAll();
-
-		a.setStyleSheet(QString::fromUtf8(qss));
+	if (QFile file(":/styles/style.qss"); file.open(QFile::ReadOnly | QFile::Text)) {
+		a.setStyleSheet(QString::fromUtf8(file.readAll()));
 	}
 
-	ConverterWidget c;
+	MainWindow w;
+	w.show();
 
-	c.setWindowTitle("Information as Bits");
-	c.setMinimumSize(640, 500);
-	c.resize(1000, 720);
-	c.show();
 	return QApplication::exec();
 }

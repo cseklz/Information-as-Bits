@@ -15,7 +15,9 @@ add_executable(Information_As_Bits
         ConverterWidget.h
         ConverterWidget.cpp
         Conversions.cpp
-        Conversions.h)
+        Conversions.h
+        MainWindow.h
+        MainWindow.cpp)
 
 qt_add_resources(Information_As_Bits "application_styles"
         PREFIX "/styles"
