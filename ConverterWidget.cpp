@@ -1,4 +1,4 @@
-#include "MainWindow.h"
+#include "ConverterWidget.h"
 #include "Conversions.h"
 
 #include <algorithm>
@@ -11,22 +11,15 @@
 #include <QPushButton>
 #include <QString>
 #include <QStyle>
-#include <QVBoxLayout>
 #include <QWidget>
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
+ConverterWidget::ConverterWidget(QWidget *parent) : QWidget(parent) {
 	createInterface();
 }
 
-void MainWindow::createInterface() {
-	setWindowTitle("Number-Base Converter");
-	setMinimumSize(640, 500);
-	resize(1000, 720);
-
-	auto* centralWidget = new QWidget(this);
-	centralWidget->setObjectName("page");
-
-	auto* pageLayout = new QVBoxLayout(centralWidget);
+void ConverterWidget::createInterface() {
+	setObjectName("ConverterWidget");
+	auto* pageLayout = new QVBoxLayout(this);
 	pageLayout->setContentsMargins(28, 24, 28, 24);
 
 	auto* card = new QFrame;
@@ -140,19 +133,17 @@ void MainWindow::createInterface() {
 	pageLayout->addWidget(card);
 	pageLayout->addStretch();
 
-	setCentralWidget(centralWidget);
-
 	connect(
 		convertButton_,
 		&QPushButton::clicked,
 		this,
-		&MainWindow::handleConversion);
+		&ConverterWidget::handleConversion);
 
 	connect(
 		inputBox_,
 		&QLineEdit::textChanged,
 		this,
-		&MainWindow::updateInputState);
+		&ConverterWidget::updateInputState);
 
 	connect(
 		inputBox_,
@@ -164,13 +155,13 @@ void MainWindow::createInterface() {
 		inputModeGroup_,
 		&QButtonGroup::idClicked,
 		this,
-		&MainWindow::handleInputMode);
+		&ConverterWidget::handleInputMode);
 
 	asciiButton->setChecked(true);
 	setInputMode(InputMode::ascii);
 }
 
-void MainWindow::updateOutputVisibility() {
+void ConverterWidget::updateOutputVisibility() {
 	const bool showAscii = inputMode_ != InputMode::ascii;
 	const bool showDecimal = inputMode_ != InputMode::decimal;
 	const bool showBinary = inputMode_ != InputMode::binary;
@@ -193,7 +184,7 @@ void MainWindow::updateOutputVisibility() {
 	hexadecimalOutput_->setVisible(showHexadecimal);
 }
 
-void MainWindow::clearOutputs() {
+void ConverterWidget::clearOutputs() {
 	asciiOutput_->clear();
 	decimalOutput_->clear();
 	binaryOutput_->clear();
@@ -202,7 +193,7 @@ void MainWindow::clearOutputs() {
 }
 
 
-void MainWindow::setInputMode(const InputMode mode) {
+void ConverterWidget::setInputMode(const InputMode mode) {
 	inputMode_ = mode;
 
 	inputBox_->clear();
@@ -240,26 +231,38 @@ void MainWindow::setInputMode(const InputMode mode) {
 	convertButton_->setEnabled(false);
 }
 
-void MainWindow::updateInputState(const QString& s) {
-	const bool isEmpty = s.isEmpty();
-	const bool isAscii = containsOnlyAscii(s);
-	const bool isValid = !isEmpty && isAscii;
-	const bool isInvalid = !isEmpty && !isAscii;
-
+void ConverterWidget::updateInputState(const QString& s) {
 	clearOutputs();
+
+	const bool isEmpty = s.isEmpty();
 
 	if (inputMode_ != InputMode::ascii) {
 		convertButton_->setEnabled(false);
+
+		inputBox_->setProperty("invalid", false);
+		statusLabel_->setProperty("invalid", false);
 
 		if (isEmpty) {
 			statusLabel_->setText("Enter a number to convert.");
 		}
 		else {
-			statusLabel_->setText("Numeric conversion is not implemented yet");
+			statusLabel_->setText(
+				"This input mode is not implemented yet."
+			);
 		}
+
+		inputBox_->style()->unpolish(inputBox_);
+		inputBox_->style()->polish(inputBox_);
+
+		statusLabel_->style()->unpolish(statusLabel_);
+		statusLabel_->style()->polish(statusLabel_);
 
 		return;
 	}
+
+	const bool containsOnlyValidAscii = containsOnlyAscii(s);
+	const bool isValid = !isEmpty && containsOnlyValidAscii;
+	const bool isInvalid = !isEmpty && !containsOnlyValidAscii;
 
 	convertButton_->setEnabled(isValid);
 
@@ -273,25 +276,26 @@ void MainWindow::updateInputState(const QString& s) {
 	statusLabel_->style()->polish(statusLabel_);
 
 	if (isEmpty) {
-		statusLabel_->setText("Enter at least one ASCII character.");
+		statusLabel_->setText(
+			"Enter at least one ASCII character."
+		);
+	}
+	else if (isInvalid) {
+		statusLabel_->setText(
+			"Enter only ASCII characters."
+		);
 	}
 	else {
 		statusLabel_->setText("Ready to convert.");
 	}
-
-	clearOutputs();
-
-	if (!isAscii) {
-		statusLabel_->setText("Enter only ASCII characters.");
-	}
 }
 
-void MainWindow::handleInputMode(const int id) {
+void ConverterWidget::handleInputMode(const int id) {
 	const auto mode = static_cast<InputMode>(id);
 	setInputMode(mode);
 }
 
-void MainWindow::handleConversion() {
+void ConverterWidget::handleConversion() {
 	if (!convertButton_->isEnabled()) {
 		return;
 	}
@@ -309,7 +313,7 @@ void MainWindow::handleConversion() {
 	statusLabel_->setText("Conversion complete.");
 }
 
-bool MainWindow::containsOnlyAscii(const QString& s) {
+bool ConverterWidget::containsOnlyAscii(const QString& s) {
 	return std::ranges::all_of(s, [](const QChar c) {
 		return c.unicode() <= 255;
 	});

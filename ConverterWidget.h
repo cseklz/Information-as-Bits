@@ -1,7 +1,7 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef CONVERTERWIDGET_H
+#define CONVERTERWIDGET_H
 
-#include <QMainWindow>
+#include <QWidget>
 
 class QButtonGroup;
 class QLabel;
@@ -9,9 +9,9 @@ class QLineEdit;
 class QPushButton;
 class QString;
 
-class MainWindow : public QMainWindow {
+class ConverterWidget : public QWidget {
 	public:
-		explicit MainWindow(QWidget* parent = nullptr);
+		explicit ConverterWidget(QWidget* parent = nullptr);
 
 	private:
 		enum class InputMode {

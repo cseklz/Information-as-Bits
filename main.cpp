@@ -1,4 +1,4 @@
-#include "MainWindow.h"
+#include "ConverterWidget.h"
 
 #include <QApplication>
 #include <QFile>
@@ -14,8 +14,11 @@ int main(int argc, char *argv[]) {
 		a.setStyleSheet(QString::fromUtf8(qss));
 	}
 
-	MainWindow w;
-	w.show();
+	ConverterWidget c;
 
+	c.setWindowTitle("Information as Bits");
+	c.setMinimumSize(640, 500);
+	c.resize(1000, 720);
+	c.show();
 	return QApplication::exec();
 }
