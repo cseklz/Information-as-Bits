@@ -8,6 +8,25 @@ namespace {
 constexpr char32_t latin1Maximum = 255;
 }
 
+AsciiConverter::Result AsciiConverter::toDecimal(const std::string_view text) {
+    if (text.empty()) {
+        return {false, {}, "Enter at least one Latin-1 character."};
+    }
+
+    std::string decimalValues;
+    decimalValues.reserve(text.size() * 4U);
+
+    for (const char character : text) {
+        if (!decimalValues.empty()) {
+            decimalValues.push_back(' ');
+        }
+        const auto value = static_cast<unsigned char>(character);
+        decimalValues += std::to_string(static_cast<unsigned int>(value));
+    }
+
+    return {true, std::move(decimalValues), {}};
+}
+
 AsciiConverter::Result AsciiConverter::toDecimal(const std::u32string_view text) {
     if (text.empty()) {
         return {false, {}, "Enter at least one Latin-1 character."};
