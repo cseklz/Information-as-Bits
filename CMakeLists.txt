@@ -40,27 +40,8 @@ target_link_libraries(Information_As_Bits PRIVATE Qt6::Widgets)
 
 include(CTest)
 if(BUILD_TESTING)
-    add_executable(AsciiConverterTests
-        tests/AsciiConverterTests.cpp
-        AsciiConverter.cpp
-        AsciiConverter.h
-    )
-    target_include_directories(AsciiConverterTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
-    add_test(NAME AsciiConverterTests COMMAND AsciiConverterTests)
-
-    add_executable(BaseConverterTests
-        tests/BaseConverterTests.cpp
-        BaseConverter.cpp
-        BaseConverter.h
-    )
-    target_include_directories(BaseConverterTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
-    add_test(NAME BaseConverterTests COMMAND BaseConverterTests)
-
-    add_executable(PixelCodecTests
-        tests/PixelCodecTests.cpp
-        PixelCodec.cpp
-        PixelCodec.h
-    )
-    target_include_directories(PixelCodecTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
-    add_test(NAME PixelCodecTests COMMAND PixelCodecTests)
+    add_executable(UnitTests
+            tests/UnitTests.cpp)
+    target_include_directories(UnitTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+    add_test(NAME UnitTests COMMAND UnitTests)
 endif()
