@@ -4,54 +4,60 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
+namespace {
+	QPushButton* createToolButton(const QString& text) {
+		auto* button = new QPushButton(text);
+		button->setProperty("role", "tool");
+		button->setCursor(Qt::PointingHandCursor);
+		button->setMinimumHeight(94);
+		return button;
+	}
+} //namespace
+
 HomePage::HomePage(QWidget* parent) : QWidget(parent) {
 	auto* layout = new QVBoxLayout(this);
-
-	layout->setContentsMargins(32, 32, 32, 32);
-	layout->setSpacing(16);
+	layout->setContentsMargins(32, 28, 32, 36);
+	layout->setSpacing(12);
 
 	auto* title = new QLabel("Information as Bits");
-	title->setObjectName("homeTitle");
+	title->setProperty("role", "homeTitle");
 
-	auto* description = new QLabel("Choose between conversion and image hex code import and export.");
-	description->setObjectName("homeDescription");
+	auto* description = new QLabel("Explore different ways to store and read data");
+	description->setProperty("role", "description");
 	description-> setWordWrap(true);
 
-	auto* conversionButton = new QPushButton("Conversions\n"
-		"Convert ASCII, decimal, binary, octal, and hexadecimal.");
-
-	conversionButton->setProperty("toolOption", true);
-	conversionButton->setCursor(Qt::PointingHandCursor);
-	conversionButton->setMinimumHeight(110);
-
-	auto* pictureButton = new QPushButton("Picture\n"
-		"Read/write pixel values or create an image from writen pixel data.");
-
-	pictureButton->setProperty("toolOption", true);
-	pictureButton->setCursor(Qt::PointingHandCursor);
-	pictureButton->setMinimumHeight(110);
-
-	pictureButton->setEnabled(false);
-	pictureButton->setToolTip("The picture feature will be implemented later");
+	auto* asciiButton = createToolButton(
+		 "ASCII to Decimal\nConvert ASCII characters to decimal.");
+	auto* baseButton = createToolButton(
+		 "Number Base Converter\nConvert binary, octal, decimal, and hexadecimal.");
+	auto* pixelButton = createToolButton(
+		 "Pixel Image Codec\nImport and export images or import pixel text.");
 
 	layout->addStretch();
 	layout->addWidget(title);
 	layout->addWidget(description);
-	layout->addSpacing(16);
+	layout->addSpacing(14);
 
-	layout->addWidget(conversionButton);
-	layout->addWidget(pictureButton);
+	layout->addWidget(asciiButton);
+	layout->addWidget(baseButton);
+	layout->addWidget(pixelButton);
 	layout->addStretch();
 
 	connect(
-		conversionButton,
+		asciiButton,
 		&QPushButton::clicked,
 		this,
-		&HomePage::conversionRequested);
+		&HomePage::asciiRequested);
 
 	connect(
-		pictureButton,
+		baseButton,
 		&QPushButton::clicked,
 		this,
-		&HomePage::pictureRequested);
+		&HomePage::baseConverterRequested);
+
+	connect(
+		pixelButton,
+		&QPushButton::clicked,
+		this,
+		&HomePage::pixelsRequested);
 }

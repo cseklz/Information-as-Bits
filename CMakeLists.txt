@@ -12,10 +12,6 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets )
 
 add_executable(Information_As_Bits
         main.cpp
-        ConverterWidget.h
-        ConverterWidget.cpp
-        Conversions.cpp
-        Conversions.h
         MainWindow.h
         MainWindow.cpp
         HomePage.h

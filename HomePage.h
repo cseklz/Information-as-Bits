@@ -10,8 +10,9 @@ class HomePage final : public QWidget {
 		explicit HomePage(QWidget* parent = nullptr);
 
 	signals:
-		void conversionRequested();
-		void pictureRequested();
+		void asciiRequested();
+		void baseConverterRequested();
+		void pixelsRequested();
 };
 
 #endif
