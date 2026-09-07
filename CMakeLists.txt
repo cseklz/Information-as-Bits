@@ -11,13 +11,28 @@ set(CMAKE_AUTORCC ON)
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
 qt_add_executable(Information_As_Bits
-        AsciiConverter.cpp
+    main.cpp
+    MainWindow.cpp
+    MainWindow.h
+    HomePage.cpp
+    HomePage.h
+    AsciiWidget.cpp
+    AsciiWidget.h
+    AsciiConverter.cpp
     AsciiConverter.h
+    BaseConverterWidget.cpp
+    BaseConverterWidget.h
+    BaseConverter.cpp
+    BaseConverter.h
+    PixelWidget.cpp
+    PixelWidget.h
+    PixelCodec.cpp
+    PixelCodec.h
 )
 
 qt_add_resources(Information_As_Bits application_styles
     PREFIX "/style"
-    BASE "/style"
+    BASE "style"
     FILES style/style.qss
 )
 
@@ -29,7 +44,11 @@ if(BUILD_TESTING)
         tests/UnitTests.cpp
         AsciiConverter.cpp
         AsciiConverter.h
+        BaseConverter.cpp
+        BaseConverter.h
+        PixelCodec.cpp
+        PixelCodec.h
     )
-    target_include_directories(UnitTests PRIVATE "../../../Downloads/Information_As_Bits_fixed 2")
+    target_include_directories(UnitTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
     add_test(NAME UnitTests COMMAND UnitTests)
 endif()

@@ -1,16 +1,15 @@
 # Information as Bits
 
-A Qt 6/C++20 desktop application for the Module 1 converter and pixel-system
-assignment. The program is organized into three independent features:
+A Qt 6 and C++20 desktop application with three independent tools:
 
-1. **ASCII to Decimal** converts strict 7-bit ASCII text to decimal codes.
-2. **Number Base Converter** converts unsigned 64-bit values among binary,
-   octal, decimal, and hexadecimal.
-3. **Pixel Image Codec** imports an image or pixel-text file, previews the
-   result, and exports lossless 8-bit RGBA pixel values.
+1. **ASCII to Decimal** uses the assignment's extended definition of ASCII:
+   the complete Latin-1 range from 0 through 255.
+2. **Number Base Converter** converts binary, octal, decimal, and hexadecimal
+   values in unsigned or two's-complement form.
+3. **Pixel Image Codec** imports images or pixel-text files, previews the
+   result, and exports lossless RGBA8 pixel text.
 
-The assignment's boundary tests are in the separate
-`tests/UnitTests.cpp` source file.
+All non-GUI logic is tested from the single tests/UnitTests.cpp source file.
 
 ## Build and run
 
@@ -18,85 +17,55 @@ Requirements:
 
 - CMake 3.21 or newer
 - A C++20 compiler
-- Qt 6.2 or newer with the Gui and Widgets components
+- Qt 6 with the Widgets component
 
 From the project directory:
 
-```sh
-cmake -S . -B build
-cmake --build build
-ctest --test-dir build --output-on-failure
-```
+    cmake -S . -B cmake-build-debug
+    cmake --build cmake-build-debug --parallel
+    ctest --test-dir cmake-build-debug --output-on-failure
 
-If CMake cannot locate Qt, pass the Qt installation directory explicitly:
+The executables are:
 
-```sh
-cmake -S . -B build -DCMAKE_PREFIX_PATH=/path/to/Qt/6.x/macos
-```
+- cmake-build-debug/Information_As_Bits
+- cmake-build-debug/UnitTests
 
-The backend and tests can also be built on a machine without Qt:
+In CLion, reload the CMake project after replacing these files, then build
+either the Information_As_Bits or UnitTests target.
 
-```sh
-cmake -S . -B build -DIAB_BUILD_GUI=OFF
-cmake --build build
-ctest --test-dir build --output-on-failure
-```
+## Latin-1 conversion
 
-## Base-converter behavior
+The converter accepts Unicode characters from U+0000 through U+00FF.
+Examples include ordinary ASCII, accented Latin-1 characters such as é, and
+byte values 128 through 255. Characters above U+00FF are rejected with their
+position in the input.
 
-Unsigned mode follows the useful behavior of `hexc`: input and output bases are
-selected independently, whitespace separates multiple values, lowercase input
-is accepted, uppercase hexadecimal is produced, and values range from zero
-through `18446744073709551615` (`UINT64_MAX`). Prefixes such as `0x` are not
-accepted because the selected input base already supplies that information.
+The overload taking std::string_view interprets every byte as an unsigned
+Latin-1 value. The UTF-32 overload is used by the Qt interface so characters
+outside Latin-1 can be detected instead of silently replaced.
 
-Two's-complement mode is an explicit extension for the assignment. Select an
-8-, 16-, 32-, or 64-bit word size. Negative input uses decimal notation; input
-in another base is interpreted as a bit pattern of the selected width. Output
-in binary, octal, or hexadecimal is padded to that width. This makes values
-such as `11111111` unambiguous: it is 255 in unsigned mode and -1 in signed
-8-bit mode.
+## Base conversion
+
+Unsigned values range from zero through UINT64_MAX. Whitespace separates
+multiple values. Two's-complement mode supports 8-, 16-, 32-, and 64-bit word
+sizes. Non-decimal signed input is treated as a bit pattern of the selected
+width.
 
 ## Pixel-text format
 
-Pixel values use a small versioned, row-major text format. Every pixel is
-`#RRGGBBAA`, which preserves transparency and matches web color ordering.
+Pixel values use uppercase #RRGGBBAA notation in a versioned, row-major text
+format:
 
-```text
-IAB-IMAGE 1
-WIDTH 2
-HEIGHT 2
-FORMAT RGBA8
-PIXELS
-#ED6A5AFF #808F85FF
-#595959FF #EBF8B8FF
-```
+    IAB-IMAGE 1
+    WIDTH 2
+    HEIGHT 1
+    FORMAT RGBA8
+    PIXELS
+    #548AF7FF #191A1CFF
 
-`Import Image` creates this text from an image. `Import Text` validates the
-headers, dimensions, format, pixel count, and hexadecimal values before it
-creates a preview image. `Export Text` saves the canonical uppercase form.
-The page accepts images up to 1,000,000 pixels. Source images are normalized to
-8-bit RGBA; color profiles, high-bit-depth channels, animation, and metadata are
-not stored in the text format.
+Images are limited to 1,000,000 pixels and pixel-text files to 12 MB.
 
-## Source organization
+## Styling
 
-- `AsciiConverter`, `BaseConverter`, and `PixelCodec` contain testable logic
-  with no GUI dependencies.
-- `AsciiWidget`, `BaseConverterWidget`, and `PixelWidget` contain the three Qt
-  pages.
-- `HomePage` and `MainWindow` provide navigation.
-- `style/style.qss` applies the assignment palette consistently.
-- `tests/UnitTests.cpp` tests normal input, validation failures, zero,
-  `UINT64_MAX`, and negative two's-complement values.
-
-## Reference
-
-The independent base-conversion implementation was informed by the interface
-and standard positional-conversion approach demonstrated by
-[sdarre/hexc](https://github.com/sdarre/hexc) (GPL-3.0). No source code from
-`hexc.c` is copied into this project.
-
-## Collaboration
-
-OpenAI Codex assisted with the refactor, and automated test design.
+style/style.qss adapts the Islands Dark interface colors for Qt. It uses
+macOS-safe font families to avoid missing-font alias warnings.
