@@ -22,10 +22,10 @@ add_executable(Information_As_Bits
         HomePage.cpp)
 
 qt_add_resources(Information_As_Bits "application_styles"
-        PREFIX "/styles"
-        BASE "styles"
+        PREFIX "/style"
+        BASE "style"
         FILES
-        styles/style.qss)
+        style/style.qss)
 
 target_link_libraries(Information_As_Bits
         PRIVATE

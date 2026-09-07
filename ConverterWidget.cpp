@@ -303,6 +303,46 @@ void ConverterWidget::handleConversion() {
 	const QByteArray bytes = inputBox_->text().toLatin1();
 	const std::string input = bytes.toStdString();
 
+	
+
+	// switch (inputMode_) {
+	// 	case InputMode::ascii:
+	// 		auto [decimal, binary, octal, hexadecimal] = Conversions::convertAscii(input);
+	// 		decimalOutput_->setText(QString::fromStdString(decimal));
+	// 		binaryOutput_->setText(QString::fromStdString(binary));
+	// 		octalOutput_->setText(QString::fromStdString(octal));
+	// 		hexadecimalOutput_->setText(QString::fromStdString(hexadecimal));
+	// 		break;
+	// 	case InputMode::decimal:
+	// 		auto [ascii, binary, octal, hexadecimal] = Conversions::convertDecimal(input);
+	// 		asciiOutput_->setText(QString::fromStdString(ascii));
+	// 		binaryOutput_->setText(QString::fromStdString(binary));
+	// 		octalOutput_->setText(QString::fromStdString(octal));
+	// 		hexadecimalOutput_->setText(QString::fromStdString(hexadecimal));
+	// 		break;
+	// 	case InputMode::binary:
+	// 		const auto [ascii, decimal, octal, hexadecimal] = Conversions::convertBinary(input);
+	// 		asciiOutput_->setText(QString::fromStdString(ascii));
+	// 		decimalOutput_->setText(QString::fromStdString(decimal));
+	// 		octalOutput_->setText(QString::fromStdString(octal));
+	// 		hexadecimalOutput_->setText(QString::fromStdString(hexadecimal));
+	// 		break;
+	// 	case InputMode::octal:
+	// 		const auto [ascii, decimal, binary, hexadecimal] = Conversions::convertOctal(input);
+	// 		asciiOutput_->setText(QString::fromStdString(ascii));
+	// 		decimalOutput_->setText(QString::fromStdString(decimal));
+	// 		binaryOutput_->setText(QString::fromStdString(binary));
+	// 		hexadecimalOutput_->setText(QString::fromStdString(hexadecimal));
+	// 		break;
+	// 	case InputMode::hexadecimal:
+	// 		const auto [ascii, decimal, binary, octal] = Conversions::convertHexadecimal(input);
+	// 		asciiOutput_->setText(QString::fromStdString(ascii));
+	// 		decimalOutput_->setText(QString::fromStdString(decimal));
+	// 		binaryOutput_->setText(QString::fromStdString(binary));
+	// 		octalOutput_->setText(QString::fromStdString(octal));
+	// 		break;
+	// }
+
 	const auto [decimal, binary, octal, hexadecimal] = Conversions::convertAll(input);
 
 	decimalOutput_->setText(QString::fromStdString(decimal));

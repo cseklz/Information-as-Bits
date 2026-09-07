@@ -13,6 +13,9 @@ public:
 	};
 
 	static Results convertAll(const std::string& s);
+	// static Results convertAscii(const std::string& s);
+	// static Results convertDecimal(const std::string& s);
+	// static Results convertBinary(const std::string& s);
 
 private:
 	static std::string toDecimal(const std::string& s);		// 0 to 255
