@@ -1,18 +1,15 @@
-#ifndef HOMEPAGE_H
-#define HOMEPAGE_H
+#pragma once
 
 #include <QWidget>
 
 class HomePage final : public QWidget {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		explicit HomePage(QWidget* parent = nullptr);
+public:
+    explicit HomePage(QWidget* parent = nullptr);
 
-	signals:
-		void asciiRequested();
-		void baseConverterRequested();
-		void pixelsRequested();
+signals:
+    void asciiRequested();
+    void baseConverterRequested();
+    void pixelsRequested();
 };
-
-#endif

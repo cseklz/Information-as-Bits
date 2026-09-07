@@ -5,59 +5,51 @@
 #include <QVBoxLayout>
 
 namespace {
-	QPushButton* createToolButton(const QString& text) {
-		auto* button = new QPushButton(text);
-		button->setProperty("role", "tool");
-		button->setCursor(Qt::PointingHandCursor);
-		button->setMinimumHeight(94);
-		return button;
-	}
-} //namespace
+QPushButton* createToolButton(const QString& text, const bool enabled) {
+    auto* button = new QPushButton(text);
+    button->setProperty("role", "tool");
+    button->setCursor(enabled ? Qt::PointingHandCursor : Qt::ArrowCursor);
+    button->setMinimumHeight(86);
+    button->setEnabled(enabled);
+    return button;
+}
+}
 
 HomePage::HomePage(QWidget* parent) : QWidget(parent) {
-	auto* layout = new QVBoxLayout(this);
-	layout->setContentsMargins(32, 28, 32, 36);
-	layout->setSpacing(12);
+    setObjectName("homePage");
 
-	auto* title = new QLabel("Information as Bits");
-	title->setProperty("role", "homeTitle");
+    auto* layout = new QVBoxLayout(this);
+    layout->setContentsMargins(36, 32, 36, 40);
+    layout->setSpacing(12);
 
-	auto* description = new QLabel("Explore different ways to store and read data");
-	description->setProperty("role", "description");
-	description-> setWordWrap(true);
+    auto* title = new QLabel("Information as Bits");
+    title->setProperty("role", "homeTitle");
 
-	auto* asciiButton = createToolButton(
-		 "ASCII to Decimal\nConvert ASCII characters to decimal.");
-	auto* baseButton = createToolButton(
-		 "Number Base Converter\nConvert binary, octal, decimal, and hexadecimal.");
-	auto* pixelButton = createToolButton(
-		 "Pixel Image Codec\nImport and export images or import pixel text.");
+    auto* description = new QLabel("Explore how computers represent text, numbers, and images.");
+    description->setProperty("role", "description");
+    description->setWordWrap(true);
 
-	layout->addStretch();
-	layout->addWidget(title);
-	layout->addWidget(description);
-	layout->addSpacing(14);
+    auto* asciiButton = createToolButton(
+        "ASCII to Decimal\nConvert Latin-1 characters to values from 0 to 255.", true);
+    auto* baseButton = createToolButton(
+        "Number Base Converter\nConvert binary, octal, decimal, and hexadecimal.", true);
+    auto* pixelButton = createToolButton(
+        "Pixel Image Codec\nImport images or pixel text, then export pixel text.", true);
 
-	layout->addWidget(asciiButton);
-	layout->addWidget(baseButton);
-	layout->addWidget(pixelButton);
-	layout->addStretch();
+    layout->addStretch(1);
+    layout->addWidget(title);
+    layout->addWidget(description);
+    layout->addSpacing(14);
+    layout->addWidget(asciiButton);
+    layout->addWidget(baseButton);
+    layout->addWidget(pixelButton);
+    layout->addStretch(1);
 
-	connect(
-		asciiButton,
-		&QPushButton::clicked,
-		this,
-		&HomePage::asciiRequested);
-
-	connect(
-		baseButton,
-		&QPushButton::clicked,
-		this,
-		&HomePage::baseConverterRequested);
-
-	connect(
-		pixelButton,
-		&QPushButton::clicked,
-		this,
-		&HomePage::pixelsRequested);
+    connect(asciiButton, &QPushButton::clicked, this, &HomePage::asciiRequested);
+    connect(
+        baseButton,
+        &QPushButton::clicked,
+        this,
+        &HomePage::baseConverterRequested);
+    connect(pixelButton, &QPushButton::clicked, this, &HomePage::pixelsRequested);
 }
