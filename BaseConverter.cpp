@@ -1,8 +1,6 @@
 #include "BaseConverter.h"
 
 #include <algorithm>
-#include <cctype>
-#include <cstdint>
 #include <limits>
 #include <sstream>
 #include <string>
@@ -57,7 +55,7 @@ struct ParsedNumber final {
         return {false, 0U, "Signs are not valid in unsigned mode."};
     }
 
-    const std::uint64_t maximum = std::numeric_limits<std::uint64_t>::max();
+    constexpr std::uint64_t maximum = std::numeric_limits<std::uint64_t>::max();
     const auto radix = static_cast<std::uint64_t>(baseValue(base));
     const std::uint64_t maximumQuotient = maximum / radix;
     const std::uint64_t maximumRemainder = maximum % radix;
@@ -106,7 +104,7 @@ struct ParsedNumber final {
     const std::uint64_t positiveLimit = negativeLimit - 1U;
 
     if (inputBase != BaseConverter::Base::decimal) {
-        const ParsedNumber parsed = parseUnsigned(token, inputBase);
+        ParsedNumber parsed = parseUnsigned(token, inputBase);
         if (!parsed.success) {
             return parsed;
         }
@@ -129,7 +127,7 @@ struct ParsedNumber final {
         return {false, 0U, "A leading plus sign is not supported."};
     }
 
-    const ParsedNumber magnitude = parseUnsigned(
+    ParsedNumber magnitude = parseUnsigned(
         magnitudeText,
         BaseConverter::Base::decimal);
     if (!magnitude.success) {
@@ -176,7 +174,7 @@ struct ParsedNumber final {
         value /= radix;
     }
 
-    std::reverse(output.begin(), output.end());
+    std::ranges::reverse(output);
     return output;
 }
 
@@ -243,7 +241,7 @@ BaseConverter::Result BaseConverter::convert(
 
     while (inputStream >> token) {
         if (convertedValues.size() >= kMaximumTokenCount) {
-            return {false, {}, "Convert at most 1024 values at one time."};
+            return {.success = false, .values = {}, .errorMessage = "Convert at most 1024 values at one time."};
         }
 
         const ParsedNumber parsed = representation == Representation::unsignedInteger
@@ -252,21 +250,21 @@ BaseConverter::Result BaseConverter::convert(
 
         if (!parsed.success) {
             return {
-                false,
-                {},
-                "Value " + std::to_string(convertedValues.size() + 1U)
-                    + " (\"" + token + "\"): " + parsed.errorMessage
+                .success = false,
+                .values = {},
+                .errorMessage = "Value " + std::to_string(convertedValues.size() + 1U)
+                                + " (\"" + token + "\"): " + parsed.errorMessage
             };
         }
 
         const std::string output = representation == Representation::unsignedInteger
             ? formatUnsigned(parsed.value, outputBase)
             : formatTwosComplement(parsed.value, outputBase, bitWidth);
-        convertedValues.push_back({std::move(token), output});
+        convertedValues.push_back({.input = std::move(token), .output = output});
     }
 
     if (convertedValues.empty()) {
-        return {false, {}, "Enter at least one value to convert."};
+        return {.success = false, .values = {}, .errorMessage = "Enter at least one value to convert."};
     }
-    return {true, std::move(convertedValues), {}};
+    return {.success = true, .values = std::move(convertedValues), .errorMessage = {}};
 }

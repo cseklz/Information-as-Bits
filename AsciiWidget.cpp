@@ -2,7 +2,6 @@
 
 #include "AsciiConverter.h"
 
-#include <QFrame>
 #include <QLabel>
 #include <QPlainTextEdit>
 #include <QPushButton>
@@ -34,20 +33,20 @@ void AsciiWidget::createInterface() {
     title->setProperty("role", "pageTitle");
 
     auto* description = new QLabel(
-        "Convert Latin-1 characters (values 0 through 255) into decimal bytes.");
+        "Convert ASCII characters (values 0 through 255) into decimal bytes.");
     description->setProperty("role", "description");
     description->setWordWrap(true);
 
-    auto* inputLabel = new QLabel("Latin-1 text");
+    auto* inputLabel = new QLabel("ASCII text");
     inputLabel->setProperty("role", "fieldLabel");
 
     input_ = new QPlainTextEdit;
     input_->setProperty("monospace", true);
-    input_->setPlaceholderText("Example: café");
+    input_->setPlaceholderText("Example: ÿés");
     input_->setMinimumHeight(105);
     input_->setMaximumHeight(145);
 
-    statusLabel_ = new QLabel("Enter at least one Latin-1 character.");
+    statusLabel_ = new QLabel("Enter at least one ASCII character.");
     statusLabel_->setProperty("role", "status");
     statusLabel_->setProperty("state", "neutral");
     statusLabel_->setWordWrap(true);
@@ -86,36 +85,36 @@ void AsciiWidget::createInterface() {
     connect(convertButton_, &QPushButton::clicked, this, &AsciiWidget::convertText);
 }
 
-void AsciiWidget::clearResult() {
+void AsciiWidget::clearResult() const {
     output_->clear();
     const bool hasInput = !input_->toPlainText().isEmpty();
     convertButton_->setEnabled(hasInput);
     setStatus(
-        hasInput ? "Ready to convert." : "Enter at least one Latin-1 character.",
+        hasInput ? "Ready to convert." : "Enter at least one ASCII character.",
         "neutral");
 }
 
-void AsciiWidget::convertText() {
+void AsciiWidget::convertText() const {
     const QList<uint> codePoints = input_->toPlainText().toUcs4();
     std::u32string text;
-    text.reserve(static_cast<std::size_t>(codePoints.size()));
+    text.reserve(codePoints.size());
 
     for (const uint codePoint : codePoints) {
         text.push_back(static_cast<char32_t>(codePoint));
     }
 
-    const AsciiConverter::Result result = AsciiConverter::toDecimal(text);
-    if (!result.success) {
+    const auto [success, decimalValues, errorMessage] = AsciiConverter::toDecimal(text);
+    if (!success) {
         output_->clear();
-        setStatus(QString::fromStdString(result.errorMessage), "error");
+        setStatus(QString::fromStdString(errorMessage), "error");
         return;
     }
 
-    output_->setPlainText(QString::fromStdString(result.decimalValues));
+    output_->setPlainText(QString::fromStdString(decimalValues));
     setStatus("Conversion complete.", "success");
 }
 
-void AsciiWidget::setStatus(const QString& message, const char* state) {
+void AsciiWidget::setStatus(const QString& message, const char* state) const {
     statusLabel_->setText(message);
     statusLabel_->setProperty("state", state);
     statusLabel_->style()->unpolish(statusLabel_);

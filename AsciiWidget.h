@@ -13,9 +13,9 @@ public:
 
 private:
     void createInterface();
-    void clearResult();
-    void convertText();
-    void setStatus(const QString& message, const char* state);
+    void clearResult() const;
+    void convertText() const;
+    void setStatus(const QString& message, const char* state) const;
 
     QPlainTextEdit* input_{nullptr};
     QPlainTextEdit* output_{nullptr};

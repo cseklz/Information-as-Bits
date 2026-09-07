@@ -1,5 +1,4 @@
-#ifndef BASE_CONVERTER_H
-#define BASE_CONVERTER_H
+#pragma once
 
 #include <string>
 #include <string_view>
@@ -37,5 +36,3 @@ public:
         Representation representation = Representation::unsignedInteger,
         unsigned int bitWidth = 8U);
 };
-
-#endif

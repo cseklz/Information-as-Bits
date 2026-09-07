@@ -6,11 +6,11 @@
 
 namespace {
 constexpr char32_t latin1Maximum = 255;
-}
+} // namespace
 
 AsciiConverter::Result AsciiConverter::toDecimal(const std::string_view text) {
     if (text.empty()) {
-        return {false, {}, "Enter at least one Latin-1 character."};
+        return {.success = false, .decimalValues = {}, .errorMessage = "Enter at least one ASCII character."};
     }
 
     std::string decimalValues;
@@ -24,12 +24,12 @@ AsciiConverter::Result AsciiConverter::toDecimal(const std::string_view text) {
         decimalValues += std::to_string(static_cast<unsigned int>(value));
     }
 
-    return {true, std::move(decimalValues), {}};
+    return {.success = true, .decimalValues = std::move(decimalValues), .errorMessage = {}};
 }
 
 AsciiConverter::Result AsciiConverter::toDecimal(const std::u32string_view text) {
     if (text.empty()) {
-        return {false, {}, "Enter at least one Latin-1 character."};
+        return {.success = false, .decimalValues = {}, .errorMessage = "Enter at least one ASCII character."};
     }
 
     std::string decimalValues;
@@ -42,15 +42,15 @@ AsciiConverter::Result AsciiConverter::toDecimal(const std::u32string_view text)
                 false,
                 {},
                 "Character " + std::to_string(index + 1U) +
-                    " is outside the Latin-1 range (0-255)."
+                    " is outside the ASCII range (0-255)."
             };
         }
 
         if (!decimalValues.empty()) {
             decimalValues.push_back(' ');
         }
-        decimalValues += std::to_string(static_cast<unsigned int>(value));
+        decimalValues += std::to_string(value);
     }
 
-    return {true, std::move(decimalValues), {}};
+    return {.success = true, .decimalValues = std::move(decimalValues), .errorMessage = {}};
 }

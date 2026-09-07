@@ -5,7 +5,6 @@
 #include "HomePage.h"
 #include "PixelWidget.h"
 
-#include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
 #include <QStackedWidget>

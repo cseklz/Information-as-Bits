@@ -21,7 +21,7 @@ private:
     void convertValues();
     void swapBases();
     void updateRepresentationControls();
-    void setStatus(const QString& message, const char* state);
+    void setStatus(const QString& message, const char* state) const;
 
     [[nodiscard]] static BaseConverter::Base selectedBase(const QComboBox* box);
 

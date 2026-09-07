@@ -29,14 +29,14 @@ private:
 
 void testLatin1(TestSuite& suite) {
     const auto letter = AsciiConverter::toDecimal("A");
-    suite.check(letter.success && letter.decimalValues == "65", "Latin-1 letter");
+    suite.check(letter.success && letter.decimalValues == "65", "ASCII letter");
 
     const auto phrase = AsciiConverter::toDecimal("Az 0");
     suite.check(
         phrase.success && phrase.decimalValues == "65 122 32 48",
-        "Latin-1 phrase");
+        "ASCII phrase");
 
-    const std::string boundaries{
+    constexpr std::string boundaries{
         static_cast<char>(0),
         static_cast<char>(127),
         static_cast<char>(128),
@@ -46,12 +46,12 @@ void testLatin1(TestSuite& suite) {
     suite.check(
         boundaryResult.success
             && boundaryResult.decimalValues == "0 127 128 255",
-        "Latin-1 accepts values 0 through 255");
+        "ASCII accepts values 0 through 255");
 
     suite.check(
         !AsciiConverter::toDecimal(U"\u0100").success,
-        "Latin-1 rejects Unicode values above 255");
-    suite.check(!AsciiConverter::toDecimal("").success, "Latin-1 rejects empty input");
+        "ASCII rejects Unicode values above 255");
+    suite.check(!AsciiConverter::toDecimal("").success, "ASCII rejects empty input");
 }
 
 void testBaseConverter(TestSuite& suite) {
@@ -84,11 +84,11 @@ void testBaseConverter(TestSuite& suite) {
 
 void testPixelCodec(TestSuite& suite) {
     const PixelImage image{
-        2U,
-        1U,
-        {
-            {255U, 0U, 16U, 255U},
-            {1U, 2U, 3U, 4U}
+        .width = 2U,
+        .height = 1U,
+        .pixels = {
+            {.red = 255U, .green = 0U, .blue = 16U, .alpha = 255U},
+            {.red = 1U, .green = 2U, .blue = 3U, .alpha = 4U}
         }
     };
 

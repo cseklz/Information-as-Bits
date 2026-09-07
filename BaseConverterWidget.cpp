@@ -2,7 +2,6 @@
 
 #include <QComboBox>
 #include <QFrame>
-#include <QHBoxLayout>
 #include <QLabel>
 #include <QPlainTextEdit>
 #include <QPushButton>
@@ -225,7 +224,7 @@ void BaseConverterWidget::updateRepresentationControls() {
     clearResult();
 }
 
-void BaseConverterWidget::setStatus(const QString& message, const char* state) {
+void BaseConverterWidget::setStatus(const QString& message, const char* state) const {
     statusLabel_->setText(message);
     statusLabel_->setProperty("state", state);
     statusLabel_->style()->unpolish(statusLabel_);
